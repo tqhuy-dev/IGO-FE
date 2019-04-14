@@ -1,0 +1,22 @@
+.login-container{
+    display: flex;
+    flex-direction: column;
+    border-radius: 1rem;
+    margin: 0px auto;
+}
+
+.login-container-header {
+    background-color: #62da3e;
+    color: #fff;
+    font-weight: bold;
+    padding: 20px 100px;
+}
+
+.form{
+    padding: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.187)   3px 3px 3px 3px;
+}
+
+.link{
+    cursor: pointer;
+}
