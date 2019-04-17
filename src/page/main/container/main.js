@@ -1,15 +1,19 @@
-import React , { Component} from 'react';
-
+import React , {Component} from 'react';
+import { Link } from 'react-router-dom';
 class MainPage extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
     }
 
     render() {
         return (
-            <div>Main paige</div>
+            <div>
+                <Link to={{
+                    pathname: '/auth'
+                }}>Login</Link>
+            </div>
         )
     }
 }
 
-export default MainPage;
+export default MainPage
