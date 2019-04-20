@@ -35,7 +35,7 @@ class LoginContainerComponent extends Component {
         axios.post(enviroment + 'users/login' , body , this.header)
         .then((result) =>{
             if(result.data.status === HttpStatus.OK) {
-                alert('Login success');
+                console.log(result);
             } else  {
                 alert(result.data.message);
             }
