@@ -1,0 +1,7 @@
+.content-body-container{
+    display: flex;
+    flex-direction: column;
+    background-color: aqua;
+    max-width: 1020px;
+    margin: auto;
+}
