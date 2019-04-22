@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../button-img/button-img.css';
 class ButtonImg extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         return (

@@ -1,17 +1,11 @@
 import React , {Component} from 'react';
 import '../styles/authorization.css';
-import Banner from '../component/banner/banner';
-import { Route , Link , Switch } from 'react-router-dom'
+import { Route  , Switch } from 'react-router-dom'
 import LoginContainerComponent from '../component/login-container/login-container';
 import SigninComponent from '../component/signin-container/signin-container'
 class AuthorizationComponent extends Component {
-    constructor(props) {
-        super(props);
-    }
-
 
     render() {
-        // this.props.history.push('/login');
         return(
                 <div className="authorization-container">
                 {/* <ul>

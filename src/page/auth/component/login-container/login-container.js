@@ -7,9 +7,6 @@ import sha256  from 'sha256';
 import { enviroment } from '../../../../core/enviroment';
 import { HASH_KEY, HttpStatus } from './../../../../share/constant';
 class LoginContainerComponent extends Component {
-    constructor(props) {
-        super(props)
-    }
 
     state={
         loginForm:{

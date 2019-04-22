@@ -1,10 +1,11 @@
 import React ,{ Component } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import '../header/header.css';
 import { Link } from 'react-router-dom';
 class Header extends Component {
-    constructor(props) {
-        super(props);
+
+    signout() {
+        localStorage.clear();
     }
 
     render() {
@@ -19,7 +20,9 @@ class Header extends Component {
                 <div className="header-btn">
                     <div className="header-btn-item">Profile</div>
                     <div className="header-btn-item">
-                        <Link to={{
+                        <Link
+                        onClick={this.signout.bind(this)} 
+                        to={{
                             pathname: '/auth'
                         }}>
                         Sign out

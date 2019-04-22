@@ -8,9 +8,6 @@ import sha256 from 'sha256';
 import { enviroment } from './../../../../core/enviroment';
 import { HASH_KEY } from './../../../../share/constant';
 class SigninComponent extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     state = {
         user:{

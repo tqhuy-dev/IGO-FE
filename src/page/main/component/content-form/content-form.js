@@ -1,10 +1,30 @@
 import React ,{ Component } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import ButtonImg from './../../../../share/component/button-img/button-img';
 import '../content-form/content-form.css';
+import { connect } from 'react-redux';
+import axios from 'axios';
+import { enviroment } from '../../../../core/enviroment';
+const token = JSON.parse(localStorage.getItem('userStorage')).token;
+const header = {
+    Authorization: 'Bearer ' + token
+}
+
 class ContentForm extends Component {
     constructor(props) {
         super(props);
+        this.getDataCity();
+    }
+
+    getDataCity() {
+        axios.get(enviroment + 'places/' , {headers: header})
+        .then((data) =>{
+            this.props.onGetCountry(data.data.data);
+        })
+        .catch((error) =>{
+            console.log(error);
+            this.props.onGetCountry([]);
+        })
     }
 
     render() {
@@ -12,11 +32,12 @@ class ContentForm extends Component {
             <div className="form-container">
                 <Form.Group controlId="formBasicEmail" className="margin-0">
                     <Form.Control
+                        onChange={(event) => this.props.onHandleChangeContent(event)}
                         type="text"
                         as="textarea"
                         rows="4" 
                         placeholder="type your content here" 
-                        onChange={(event) => this.handleInputChange(event , 'username')}/>
+                        />
                 </Form.Group>
                 <div className="btn-container">
                     <ButtonImg
@@ -29,11 +50,11 @@ class ContentForm extends Component {
 
                     <Form.Group controlId="exampleForm.ControlSelect1" className="margin-auto">
                         <Form.Control as="select">
-                            <option>VietNam</option>
-                            <option>Singapore</option>
-                            <option>Korean</option>
-                            <option>Japan</option>
-                            <option>USA</option>
+                            {this.props.country.map((element , index) => {
+                                return (
+                                    <option key={element._id}>{element.name}</option>
+                                )
+                            })}
                         </Form.Control>
                     </Form.Group>
 
@@ -65,11 +86,40 @@ class ContentForm extends Component {
                 </div>
 
                 <div className="post-container">
-                    <div className="post-btn">Post</div>
+                    <div 
+                    className="post-btn"
+                    onClick={this.props.onPostContent}
+                    >Post</div>
                 </div>
             </div>
         )
     }
 }
 
-export default ContentForm;
+const mapStateToProps = state =>{
+    return {
+        content: state.form.content,
+        country: state.data.country
+    };
+};
+
+const mapDispatchToProps = dispatch =>{
+    return {
+        onHandleChangeContent: (event) => dispatch({
+            type: 'TYPE_CONTENT',
+            value: event.target.value
+        }),
+
+        onPostContent: () => dispatch({
+            type: 'POST'
+        }),
+
+        onGetCountry: (value) => dispatch({
+            type: 'GET_COUNTRY',
+            value: value
+        })
+    }
+}
+
+
+export default connect(mapStateToProps , mapDispatchToProps)(ContentForm);
