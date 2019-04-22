@@ -1,0 +1,19 @@
+.button-container{
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(235, 235, 235, 0.938);
+    padding: 3px 1rem;
+    cursor: pointer;
+    margin: 0.5rem;
+}
+
+.title{
+    margin-left: 0.5rem;
+    font-size: 15px;
+    font-weight: bold;
+    color: rgb(88, 88, 88);
+}
+
+.center{
+    margin: auto;
+}
