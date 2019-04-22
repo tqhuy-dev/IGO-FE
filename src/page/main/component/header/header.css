@@ -24,3 +24,15 @@
     font-weight: bold;
     cursor: pointer;
 }
+
+a:active{
+    color: white;
+}
+
+a:hover{
+    color: white;
+}
+
+a{
+    color: white;
+}

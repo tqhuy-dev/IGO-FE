@@ -1,6 +1,7 @@
 import React ,{ Component } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import '../header/header.css';
+import { Link } from 'react-router-dom';
 class Header extends Component {
     constructor(props) {
         super(props);
@@ -17,7 +18,13 @@ class Header extends Component {
                 </Form.Group>
                 <div className="header-btn">
                     <div className="header-btn-item">Profile</div>
-                    <div className="header-btn-item">Sign out</div>
+                    <div className="header-btn-item">
+                        <Link to={{
+                            pathname: '/auth'
+                        }}>
+                        Sign out
+                        </Link>
+                    </div>
                     <div className="header-btn-item">Setting</div>
                     <div className="header-btn-item">Filter</div>
                 </div>
