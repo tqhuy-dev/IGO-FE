@@ -1,5 +1,6 @@
 import React , {Component} from 'react';
 import { Link } from 'react-router-dom';
+import Header from '../component/header/header';
 class MainPage extends Component {
     constructor(props) {
         super(props);
@@ -8,9 +9,10 @@ class MainPage extends Component {
     render() {
         return (
             <div>
-                <Link to={{
+                {/* <Link to={{
                     pathname: '/auth'
-                }}>Login</Link>
+                }}>Login</Link> */}
+                <Header />
             </div>
         )
     }

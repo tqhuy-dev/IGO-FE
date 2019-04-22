@@ -35,7 +35,12 @@ class LoginContainerComponent extends Component {
         axios.post(enviroment + 'users/login' , body , this.header)
         .then((result) =>{
             if(result.data.status === HttpStatus.OK) {
-                console.log(result);
+                let bodyData = {
+                    data: result.data.data,
+                    token: result.data.access_token
+                };
+                localStorage.setItem('userStorage' , JSON.stringify(bodyData));
+                this.props.history.push('/');
             } else  {
                 alert(result.data.message);
             }
