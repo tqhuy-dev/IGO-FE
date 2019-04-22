@@ -13,17 +13,44 @@ const header = {
 class ContentForm extends Component {
     constructor(props) {
         super(props);
-        this.getDataCity();
+        this.getDataCountry();
     }
 
-    getDataCity() {
-        axios.get(enviroment + 'places/' , {headers: header})
+    async getDataCountry() {
+        try {
+            let dataCountry = await axios.get(enviroment + 'places/' , {headers: header})
+            this.props.onGetCountry(dataCountry.data.data);
+
+            let dataCity = await axios.get(enviroment + 'places/' + dataCountry.data.data[0]._id , {headers : header});
+            this.props.onGetCity(dataCity.data.data);
+
+            let dataLocation = await axios.get(enviroment + 'places/locations/' + dataCity.data.data[0]._id , {
+                headers: header
+            });
+            this.props.onGetLocation(dataLocation.data.data);
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    getDataCity(event) {
+        axios.get(enviroment + 'places/' + event.target.value , {headers : header})
         .then((data) =>{
-            this.props.onGetCountry(data.data.data);
+            this.props.onGetCity(data.data.data);
         })
         .catch((error) =>{
-            console.log(error);
-            this.props.onGetCountry([]);
+            this.props.onGetCity([]);
+        })
+    }
+
+    getDataLocation(event) {
+        axios.get(enviroment + 'places/locations/' + event.target.value , {headers : header})
+        .then((data) =>{
+            this.props.onGetLocation(data.data.data);
+        })
+        .catch((error) =>{
+            this.props.onGetLocation([]);
         })
     }
 
@@ -32,7 +59,6 @@ class ContentForm extends Component {
             <div className="form-container">
                 <Form.Group controlId="formBasicEmail" className="margin-0">
                     <Form.Control
-                        onChange={(event) => this.props.onHandleChangeContent(event)}
                         type="text"
                         as="textarea"
                         rows="4" 
@@ -49,32 +75,41 @@ class ContentForm extends Component {
                     />
 
                     <Form.Group controlId="exampleForm.ControlSelect1" className="margin-auto">
-                        <Form.Control as="select">
+                        <Form.Control
+                        onChange={(event) => this.getDataCity(event)}
+                        as="select">
                             {this.props.country.map((element , index) => {
                                 return (
-                                    <option key={element._id}>{element.name}</option>
+                                    <option
+                                    value = {element._id} 
+                                    key = {element._id}
+                                    >{element.name}</option>
                                 )
                             })}
                         </Form.Control>
                     </Form.Group>
 
                     <Form.Group controlId="exampleForm.ControlSelect1" className="margin-auto">
-                        <Form.Control as="select">
-                            <option>HCM City</option>
-                            <option>Da Lat</option>
-                            <option>Da Nang</option>
-                            <option>Phu Quoc</option>
-                            <option>Phan Rang</option>
+                        <Form.Control
+                        onChange={(event) => this.getDataLocation(event)}
+                        as="select">
+                          {this.props.city.map((element , index) => {
+                              return (
+                                <option
+                                value = {element._id} 
+                                key={element._id}>{element.name}</option>
+                              )
+                          })}
                         </Form.Control>
                     </Form.Group>
 
                     <Form.Group controlId="exampleForm.ControlSelect1" className="margin-auto">
                         <Form.Control as="select">
-                            <option>Thung Lung Tinh Yeu</option>
-                            <option>Doi Mong Mo</option>
-                            <option>Ho Xuan Huong</option>
-                            <option>Langbiang</option>
-                            <option>Thac Voi</option>
+                        {this.props.location.map((element , index) => {
+                              return (
+                                <option key={element._id}>{element.name}</option>
+                              )
+                          })}
                         </Form.Control>
                     </Form.Group>
 
@@ -99,7 +134,9 @@ class ContentForm extends Component {
 const mapStateToProps = state =>{
     return {
         content: state.form.content,
-        country: state.data.country
+        country: state.data.country,
+        city: state.data.city,
+        location: state.data.location
     };
 };
 
@@ -107,7 +144,7 @@ const mapDispatchToProps = dispatch =>{
     return {
         onHandleChangeContent: (event) => dispatch({
             type: 'TYPE_CONTENT',
-            value: event.target.value
+            value: event.target.key
         }),
 
         onPostContent: () => dispatch({
@@ -116,6 +153,16 @@ const mapDispatchToProps = dispatch =>{
 
         onGetCountry: (value) => dispatch({
             type: 'GET_COUNTRY',
+            value: value
+        }),
+
+        onGetCity: (value) => dispatch({
+            type: 'GET_CITY',
+            value: value
+        }),
+
+        onGetLocation: (value) => dispatch({
+            type: 'GET_LOCATION',
             value: value
         })
     }
