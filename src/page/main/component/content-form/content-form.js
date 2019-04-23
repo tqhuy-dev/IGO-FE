@@ -5,10 +5,6 @@ import '../content-form/content-form.css';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { enviroment } from '../../../../core/enviroment';
-const token = JSON.parse(localStorage.getItem('userStorage')).token;
-const header = {
-    Authorization: 'Bearer ' + token
-}
 
 class ContentForm extends Component {
     constructor(props) {
@@ -18,16 +14,33 @@ class ContentForm extends Component {
 
     async getDataCountry() {
         try {
-            let dataCountry = await axios.get(enviroment + 'places/' , {headers: header})
+            const token = JSON.parse(localStorage.getItem('userStorage')).token;
+            let dataCountry = await axios.get(enviroment + 'places/' , 
+            {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            })
             this.props.onGetCountry(dataCountry.data.data);
 
-            let dataCity = await axios.get(enviroment + 'places/' + dataCountry.data.data[0]._id , {headers : header});
+            let dataCity = await axios.get(enviroment + 'places/' + dataCountry.data.data[0]._id , {
+                headers : {
+                    Authorization: 'Bearer ' + token
+                }
+            });
             this.props.onGetCity(dataCity.data.data);
 
             let dataLocation = await axios.get(enviroment + 'places/locations/' + dataCity.data.data[0]._id , {
-                headers: header
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
             });
             this.props.onGetLocation(dataLocation.data.data);
+
+            this.props.onHandleChangeCountry({
+                country: dataCountry.data.data[0].name,
+                name: dataCity.data.data[0].name,
+            })
             
         } catch (error) {
             console.log(error);
@@ -35,9 +48,16 @@ class ContentForm extends Component {
     }
 
     getDataCity(event) {
-        axios.get(enviroment + 'places/' + event.target.value , {headers : header})
+        const token = JSON.parse(localStorage.getItem('userStorage')).token;
+        axios.get(enviroment + 'places/' + event.target.value , {headers : {
+            Authorization: 'Bearer ' + token
+        }})
         .then((data) =>{
             this.props.onGetCity(data.data.data);
+            this.props.onHandleChangeCountry({
+                country: data.data.country.name,
+                name:data.data.data[0].name
+            })
         })
         .catch((error) =>{
             this.props.onGetCity([]);
@@ -45,9 +65,13 @@ class ContentForm extends Component {
     }
 
     getDataLocation(event) {
-        axios.get(enviroment + 'places/locations/' + event.target.value , {headers : header})
+        const token = JSON.parse(localStorage.getItem('userStorage')).token;
+        axios.get(enviroment + 'places/locations/' + event.target.value , {headers : {
+            Authorization: 'Bearer ' + token
+        }})
         .then((data) =>{
             this.props.onGetLocation(data.data.data);
+            this.props.oHandleChangeCity(data.data.city.name);
         })
         .catch((error) =>{
             this.props.onGetLocation([]);
@@ -59,12 +83,17 @@ class ContentForm extends Component {
             <div className="form-container">
                 <Form.Group controlId="formBasicEmail" className="margin-0">
                     <Form.Control
+                        onChange={(event) => this.props.onHandleChangeContent(event)}
                         type="text"
                         as="textarea"
                         rows="4" 
                         placeholder="type your content here" 
                         />
                 </Form.Group>
+                <div className="location-tag">
+                    <div className="location-item">TPHCM <span className="margin-auto close-tag">x</span></div>
+                    <div className="location-item">TPHCM <span className="margin-auto close-tag">x</span></div>
+                </div>
                 <div className="btn-container">
                     <ButtonImg
                     name="Images"
@@ -74,7 +103,7 @@ class ContentForm extends Component {
                     name="Friends"
                     />
 
-                    <Form.Group controlId="exampleForm.ControlSelect1" className="margin-auto">
+                    <Form.Group controlId="country" className="margin-auto">
                         <Form.Control
                         onChange={(event) => this.getDataCity(event)}
                         as="select">
@@ -89,7 +118,7 @@ class ContentForm extends Component {
                         </Form.Control>
                     </Form.Group>
 
-                    <Form.Group controlId="exampleForm.ControlSelect1" className="margin-auto">
+                    <Form.Group controlId="city" className="margin-auto">
                         <Form.Control
                         onChange={(event) => this.getDataLocation(event)}
                         as="select">
@@ -103,18 +132,25 @@ class ContentForm extends Component {
                         </Form.Control>
                     </Form.Group>
 
-                    <Form.Group controlId="exampleForm.ControlSelect1" className="margin-auto">
-                        <Form.Control as="select">
-                        {this.props.location.map((element , index) => {
+                    <Form.Group controlId="location" className="margin-auto">
+                        <Form.Control
+                        onChange={(event) => this.props.onHandleChangeLocation(event)}
+                        as="select">
+                        {this.props.location.map((element  , index) => {
                               return (
-                                <option key={element._id}>{element.name}</option>
+                                <option 
+                                key={element._id}
+                                value={element.name}
+                                >{element.name}</option>
                               )
                           })}
                         </Form.Control>
                     </Form.Group>
 
                     <Form.Group controlId="exampleForm.ControlSelect1" className="margin-auto">
-                        <Form.Control 
+                        <Form.Control
+                        type="number"
+                        onChange={(event) => this.props.onHandleChangePrice(event)}
                         placeholder="total price">
                         </Form.Control>
                     </Form.Group>
@@ -144,7 +180,27 @@ const mapDispatchToProps = dispatch =>{
     return {
         onHandleChangeContent: (event) => dispatch({
             type: 'TYPE_CONTENT',
-            value: event.target.key
+            value: event.target.value
+        }),
+
+        onHandleChangeCountry: (valueLocation) => dispatch({
+            type: 'TYPE_COUNTRY',
+            value: valueLocation
+        }),
+
+        oHandleChangeCity: (valueCity) => dispatch({
+            type: 'TYPE_CITY',
+            value: valueCity
+        }),
+
+        onHandleChangeLocation: (event) => dispatch({
+            type: 'TYPE_LOCATION',
+            value:event.target.value
+        }),
+
+        onHandleChangePrice: (event) => dispatch({
+            type: 'TYPE_PRICE',
+            value: event.target.value
         }),
 
         onPostContent: () => dispatch({

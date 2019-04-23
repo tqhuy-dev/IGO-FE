@@ -32,3 +32,28 @@
     border-radius: 5%;
     padding: 1px 1rem;
 }
+
+.location-tag{
+    display: flex;
+    flex-direction: row;
+    padding: 0.25rem;
+    flex-wrap: nowrap;
+}
+
+.location-item{
+    background-color: rgb(171, 161, 255);
+    font-size: 10px;
+    color: white;
+    font-weight: bold;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-right: 0.5rem;
+}
+
+.close-tag{
+    cursor: pointer;
+}
+
+.close-tag:hover{
+    color: rgb(104, 104, 104);
+}
