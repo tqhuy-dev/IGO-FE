@@ -52,6 +52,7 @@
 
 .close-tag{
     cursor: pointer;
+    margin-left: 5px;
 }
 
 .close-tag:hover{

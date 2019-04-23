@@ -91,8 +91,16 @@ class ContentForm extends Component {
                         />
                 </Form.Group>
                 <div className="location-tag">
-                    <div className="location-item">TPHCM <span className="margin-auto close-tag">x</span></div>
-                    <div className="location-item">TPHCM <span className="margin-auto close-tag">x</span></div>
+                    {this.props.content.location.checkin.map((element , index) =>{
+                        return (
+                            <div
+                            key={index} 
+                            className="location-item">{element.location} 
+                            <span
+                            onClick={() => this.props.onHandleChangeLocation(element.location , 'DELETE')} 
+                            className="margin-auto close-tag">x</span></div>
+                        )
+                    })}
                 </div>
                 <div className="btn-container">
                     <ButtonImg
@@ -134,7 +142,7 @@ class ContentForm extends Component {
 
                     <Form.Group controlId="location" className="margin-auto">
                         <Form.Control
-                        onChange={(event) => this.props.onHandleChangeLocation(event)}
+                        onChange={(event) => this.props.onHandleChangeLocation(event, 'ADD')}
                         as="select">
                         {this.props.location.map((element  , index) => {
                               return (
@@ -169,7 +177,7 @@ class ContentForm extends Component {
 
 const mapStateToProps = state =>{
     return {
-        content: state.form.content,
+        content: state.form.contentForm,
         country: state.data.country,
         city: state.data.city,
         location: state.data.location
@@ -193,9 +201,10 @@ const mapDispatchToProps = dispatch =>{
             value: valueCity
         }),
 
-        onHandleChangeLocation: (event) => dispatch({
+        onHandleChangeLocation: (event , type) => dispatch({
             type: 'TYPE_LOCATION',
-            value:event.target.value
+            value:event,
+            active:type
         }),
 
         onHandleChangePrice: (event) => dispatch({
