@@ -2,7 +2,9 @@ const initializeState = {
     country:[
     ],
     city:[],
-    location:[]
+    location:[],
+    typeVacation:[],
+    travelMovement: []
 };
 
 const CityReducer = (state = initializeState , action) =>{
@@ -21,6 +23,18 @@ const CityReducer = (state = initializeState , action) =>{
            ...state,
            location: action.value
        }
+    }else
+    if(action.type === 'GET_VACATION_TYPES') {
+        return {
+            ...state,
+            typeVacation: action.value
+        }
+    }else
+    if(action.type === 'GET_TRAVEL') {
+        return {
+            ...state,
+            travelMovement: action.value
+        }
     }
     return state;
 }

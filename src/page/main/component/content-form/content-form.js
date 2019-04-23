@@ -5,11 +5,40 @@ import '../content-form/content-form.css';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { enviroment } from '../../../../core/enviroment';
+import  DatePicker  from 'react-datepicker';
 
 class ContentForm extends Component {
+
+
     constructor(props) {
         super(props);
         this.getDataCountry();
+        this.getDataTypeFromServer();
+        this.getTravelMovement();
+    }
+
+    getDataTypeFromServer() {
+        const token = JSON.parse(localStorage.getItem('userStorage')).token;
+        axios.get(enviroment + 'data-types/type-vacation',  {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        .then((data) =>{
+          this.props.onGetVacationTypes(data.data.data);
+        })
+    }
+
+    getTravelMovement() {
+        const token = JSON.parse(localStorage.getItem('userStorage')).token;
+        axios.get(enviroment + 'data-types/travel',  {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        .then((data) =>{
+          this.props.onGetTravelMovement(data.data.data);
+        })
     }
 
     async getDataCountry() {
@@ -164,8 +193,58 @@ class ContentForm extends Component {
                     </Form.Group>
                 </div>
 
+                <div className="btn-container padding-1">
+                    <DatePicker
+                    selectsStart
+                    startDate={this.props.content.range.from}
+                    endDate={this.props.content.range.to}
+                    onChange={(event) => this.props.onHandleChangeDate(event,'FROM')}
+                    selected={this.props.content.range.from}
+                    placeholderText="From"
+                     />
+                    <DatePicker
+                    selectsEnd
+                    startDate={this.props.content.range.from}
+                    endDate={this.props.content.range.to}
+                    onChange={(event) => this.props.onHandleChangeDate(event , 'TO')}
+                    selected={this.props.content.range.to}
+                    placeholderText="To"
+                     />
+
+                    <Form.Group controlId="type_vacation" className="margin-auto">
+                        <Form.Control
+                        onChange={(event) => this.props.onHandleSelectTypeVacation(event)}
+                        as="select">
+                            {this.props.vacationTypes.map((element , index) =>{
+                                return (
+                                    <option
+                                    key={index}
+                                    value={element.name}
+                                    >{element.name}</option>
+                                )
+                            })}
+                        </Form.Control>
+                    </Form.Group>
+
+                    <Form.Group controlId="travel_movement" className="margin-auto">
+                        <Form.Control
+                        onChange={(event) => this.props.onHandleSelectTravel(event)}
+                        as="select">
+                            {this.props.travelMovement.map((element , index) =>{
+                                return (
+                                    <option
+                                    key={index}
+                                    value={element.name}
+                                    >{element.name}</option>
+                                )
+                            })}
+                        </Form.Control>
+                    </Form.Group>
+
+                </div>
+
                 <div className="post-container">
-                    <div 
+                    <div
                     className="post-btn"
                     onClick={this.props.onPostContent}
                     >Post</div>
@@ -180,7 +259,9 @@ const mapStateToProps = state =>{
         content: state.form.contentForm,
         country: state.data.country,
         city: state.data.city,
-        location: state.data.location
+        location: state.data.location,
+        vacationTypes: state.data.typeVacation,
+        travelMovement: state.data.travelMovement
     };
 };
 
@@ -212,6 +293,22 @@ const mapDispatchToProps = dispatch =>{
             value: event.target.value
         }),
 
+        onHandleChangeDate: (event , type) => dispatch({
+            type: 'TYPE_RANGE',
+            range: type,
+            value: event
+        }),
+
+        onHandleSelectTypeVacation : (event) => dispatch({
+            type: 'TYPE_VACATION',
+            value: event.target.value
+        }),
+
+        onHandleSelectTravel: (event) => dispatch({
+            type: 'TYPE_TRAVEL',
+            value: event.target.value
+        }),
+
         onPostContent: () => dispatch({
             type: 'POST'
         }),
@@ -228,6 +325,16 @@ const mapDispatchToProps = dispatch =>{
 
         onGetLocation: (value) => dispatch({
             type: 'GET_LOCATION',
+            value: value
+        }),
+
+        onGetVacationTypes: (value) => dispatch({
+            type: 'GET_VACATION_TYPES',
+            value: value
+        }),
+
+        onGetTravelMovement: (value) => dispatch({
+            type: 'GET_TRAVEL',
             value: value
         })
     }
