@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import sha256  from 'sha256';
 import { enviroment } from '../../../../core/enviroment';
-import { HASH_KEY, HttpStatus } from './../../../../share/constant';
+import { HASH_KEY, HttpStatus, localStorageUserKey } from './../../../../share/constant';
 class LoginContainerComponent extends Component {
 
     state={
@@ -36,7 +36,7 @@ class LoginContainerComponent extends Component {
                     data: result.data.data,
                     token: result.data.access_token
                 };
-                localStorage.setItem('userStorage' , JSON.stringify(bodyData));
+                localStorage.setItem(localStorageUserKey , JSON.stringify(bodyData));
                 this.props.history.push('/');
             } else  {
                 alert(result.data.message);

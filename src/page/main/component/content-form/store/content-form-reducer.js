@@ -1,3 +1,6 @@
+import { localStorageUserKey } from "../../../../../share/constant";
+import axios from 'axios';
+import { enviroment } from './../../../../../core/enviroment';
 const initializeState = {
     contentForm: {
         content: '',
@@ -8,12 +11,14 @@ const initializeState = {
         },
         tag: [],
         travel: [],
-        type: '',
+        type: 'Short-term vacation',
         range: {
             from: new Date(),
             to: new Date()
         },
-        price: 0
+        price: 0,
+        hotels:[],
+        images:[]
     }
 }
 
@@ -25,8 +30,38 @@ const contentFormReducer = (state = initializeState, action) => {
     } else
     if (action.type === 'POST') {
         const newState = Object.assign({}, state);
-        console.log(newState);
-        return newState;
+        let username = JSON.parse(localStorage.getItem(localStorageUserKey)).data.username;
+        let token =  JSON.parse(localStorage.getItem(localStorageUserKey)).token;
+        let bodyContent = {
+            username: username,
+            content: state.contentForm.content,
+            location: state.contentForm.location,
+            tag: state.contentForm.tag,
+            travel: state.contentForm.travel,
+            type: state.contentForm.type,
+            range: {
+                from: new Date(state.contentForm.range.from).getTime().toString(),
+                to: new Date(state.contentForm.range.to).getTime().toString(),
+            },
+            total_price: state.contentForm.price,
+            hotel:state.contentForm.hotels,
+            images: state.contentForm.images,
+            metadata:{
+                description:''
+            }
+        }
+        axios.post(enviroment + 'contents' , bodyContent , {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        .then((data) => {
+            alert(data.data.message);
+            return newState;
+        })
+        .catch(error =>{
+            console.log(error);
+        })
     } else
     if (action.type === 'TYPE_LOCATION') {
         let dataLocation = action.active === 'ADD' ?
@@ -43,8 +78,10 @@ const contentFormReducer = (state = initializeState, action) => {
             location = {
                 ...state.contentForm.location,
                 checkin: state.contentForm.location.checkin.concat({
-                    location: dataLocation,
-                    rate: 5
+                    name: dataLocation,
+                    rate: 5,
+                    address: '',
+                    images:[]
                 })
             }
         } else {
@@ -106,20 +143,32 @@ const contentFormReducer = (state = initializeState, action) => {
             ...state,
             contentForm: newContentForm
         }
-    }else
-    if( action.type === 'TYPE_VACATION') {
-        const newState = Object.assign({} , state);
+    } else
+    if (action.type === 'TYPE_VACATION') {
+        const newState = Object.assign({}, state);
         newState.contentForm.type = action.value;
         return newState;
-    }else
-    if( action.type === 'TYPE_TRAVEL') {
-        let newForm = {
-            ...state.contentForm,
-            travel: state.contentForm.travel.concat({
-                name:action.value
-            })
-        };
+    } else
+    if (action.type === 'TYPE_TRAVEL') {
+        let newForm;
+        let dataTravel = action.active === 'ADD' ? action.value.target.value : action.value;
+        const index = state.contentForm.travel.findIndex(o => o.name === dataTravel);
 
+        if (action.active === 'ADD') {
+            if (index === -1) {
+                newForm = {
+                    ...state.contentForm,
+                    travel: state.contentForm.travel.concat({
+                        name: dataTravel
+                    })
+                };
+            } else {
+                return state;
+            }
+        } else {
+            newForm = Object.assign({} , state.contentForm);
+            newForm.travel.splice(index , 1);
+        }
         return {
             ...state,
             contentForm: newForm

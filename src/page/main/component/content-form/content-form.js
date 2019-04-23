@@ -124,9 +124,21 @@ class ContentForm extends Component {
                         return (
                             <div
                             key={index} 
-                            className="location-item">{element.location} 
+                            className="location-item">{element.name} 
                             <span
-                            onClick={() => this.props.onHandleChangeLocation(element.location , 'DELETE')} 
+                            onClick={() => this.props.onHandleChangeLocation(element.name , 'DELETE')} 
+                            className="margin-auto close-tag">x</span></div>
+                        )
+                    })}
+                </div>
+                <div className="location-tag">
+                    {this.props.content.travel.map((element , index) =>{
+                        return (
+                            <div
+                            onClick={() => this.props.onHandleSelectTravel(element.name , 'DELETE')}
+                            key={index} 
+                            className="location-item">{element.name} 
+                            <span
                             className="margin-auto close-tag">x</span></div>
                         )
                     })}
@@ -228,7 +240,7 @@ class ContentForm extends Component {
 
                     <Form.Group controlId="travel_movement" className="margin-auto">
                         <Form.Control
-                        onChange={(event) => this.props.onHandleSelectTravel(event)}
+                        onChange={(event) => this.props.onHandleSelectTravel(event , 'ADD')}
                         as="select">
                             {this.props.travelMovement.map((element , index) =>{
                                 return (
@@ -304,9 +316,10 @@ const mapDispatchToProps = dispatch =>{
             value: event.target.value
         }),
 
-        onHandleSelectTravel: (event) => dispatch({
+        onHandleSelectTravel: (event , type) => dispatch({
             type: 'TYPE_TRAVEL',
-            value: event.target.value
+            value: event,
+            active: type
         }),
 
         onPostContent: () => dispatch({
