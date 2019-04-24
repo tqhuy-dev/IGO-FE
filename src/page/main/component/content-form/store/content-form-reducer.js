@@ -40,8 +40,8 @@ const contentFormReducer = (state = initializeState, action) => {
             travel: state.contentForm.travel,
             type: state.contentForm.type,
             range: {
-                from: new Date(state.contentForm.range.from).getTime().toString(),
-                to: new Date(state.contentForm.range.to).getTime().toString(),
+                from: (new Date(state.contentForm.range.from).getTime()).toString(),
+                to: (new Date(state.contentForm.range.to).getTime()).toString(),
             },
             total_price: state.contentForm.price,
             hotel:state.contentForm.hotels,
