@@ -19,6 +19,7 @@ class ContentItem extends Component {
                                 > <a href="">{element.name} , </a></span>
                             )
                         })}
+                        <span className="delete">delete</span>
                         </div>
                         <div className="header-time">{ new Date(Number.parseInt(this.props.data.createAt)).toLocaleDateString('en-US')}
                         <span className="header-country">{this.props.data.location.name} - {this.props.data.location.country}</span>
