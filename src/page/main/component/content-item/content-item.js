@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import '../content-item/content-item.css';
 import svg from '../../../../logo.svg';
 class ContentItem extends Component {
-    constructor(props){
-        super(props);
-    }
 
     render() {
         return (

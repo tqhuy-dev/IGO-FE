@@ -19,6 +19,9 @@ const initializeState = {
         price: 0,
         hotels:[],
         images:[]
+    },
+    listContent:{
+        data:[]
     }
 }
 
@@ -29,7 +32,6 @@ const contentFormReducer = (state = initializeState, action) => {
         return newState;
     } else
     if (action.type === 'POST') {
-        const newState = Object.assign({}, state);
         let username = JSON.parse(localStorage.getItem(localStorageUserKey)).data.username;
         let token =  JSON.parse(localStorage.getItem(localStorageUserKey)).token;
         let bodyContent = {
@@ -57,11 +59,11 @@ const contentFormReducer = (state = initializeState, action) => {
         })
         .then((data) => {
             alert(data.data.message);
-            return newState;
         })
         .catch(error =>{
             console.log(error);
         })
+        window.location.reload();
     } else
     if (action.type === 'TYPE_LOCATION') {
         let dataLocation = action.active === 'ADD' ?
@@ -173,7 +175,19 @@ const contentFormReducer = (state = initializeState, action) => {
             ...state,
             contentForm: newForm
         }
+    }else 
+    if(action.type === 'GET_LIST_CONTENTS') {
+        let listContentData = {
+            ...state.listContent,
+            data: action.value
+        }
+        return {
+            ...state,
+            listContent: listContentData
+        };
     }
+    console.log('active');
+    
     return state;
 }
 

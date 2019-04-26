@@ -24,7 +24,7 @@ class ContentList extends Component {
     render() {
         return (
             <div className="list-content-container">
-               {this.props.contents.map((element , index) =>{
+               {this.props.contents.data.map((element , index) =>{
                    return (
                        <ContentItem
                        key={index}
@@ -39,7 +39,7 @@ class ContentList extends Component {
 
 const mapStateToProps = state =>{
     return {
-        contents: state.listContent
+        contents: state.form.listContent
     }
 }
 
