@@ -7,9 +7,11 @@ import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux'
 import contentFormReducer from './page/main/component/content-form/store/content-form-reducer';
 import CityReducer from './page/main/component/content-form/store/city-reducer';
+import userDetailReducer from './page/profile/store/user-detail-reducer';
 const rootReducer = combineReducers({
     form: contentFormReducer,
-    data: CityReducer
+    data: CityReducer,
+    user: userDetailReducer
 })
 const store = createStore(rootReducer);
 ReactDOM.render( <Provider store={store}> <App /></Provider>, document.getElementById('root'));

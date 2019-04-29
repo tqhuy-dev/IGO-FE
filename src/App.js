@@ -24,7 +24,7 @@ class App extends Component {
             )}
           /> */}
           <Route path="/auth" component={AuthorizationComponent} />
-          <Route path="/profile" component={Profile} />
+          <Route path="/profile/:username" component={Profile} />
           <Route path="/" component={MainPage} />
           {/* <Redirect /> */}
         </Switch>

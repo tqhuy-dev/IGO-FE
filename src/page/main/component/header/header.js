@@ -21,7 +21,7 @@ class Header extends Component {
                     <div className="header-btn-item">
                         <Link
                         to={{
-                            pathname: '/profile'
+                            pathname: '/profile/tqhuy1996'
                         }}
                         >Profile</Link>
                     </div>
