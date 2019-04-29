@@ -5,6 +5,7 @@ import AuthorizationComponent from '../src/page/auth/container/authorization';
 import  MainPage  from '../src/page/main/container/main';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faStroopwafel } from '@fortawesome/free-solid-svg-icons'
+import Profile from './page/profile/profile';
 
 library.add(faStroopwafel)
 class App extends Component {
@@ -23,6 +24,7 @@ class App extends Component {
             )}
           /> */}
           <Route path="/auth" component={AuthorizationComponent} />
+          <Route path="/profile" component={Profile} />
           <Route path="/" component={MainPage} />
           {/* <Redirect /> */}
         </Switch>

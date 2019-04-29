@@ -18,7 +18,21 @@ class Header extends Component {
                         onChange={(event) => this.handleInputChange(event , 'username')}/>
                 </Form.Group>
                 <div className="header-btn">
-                    <div className="header-btn-item">Profile</div>
+                    <div className="header-btn-item">
+                        <Link
+                        to={{
+                            pathname: '/profile'
+                        }}
+                        >Profile</Link>
+                    </div>
+                    <div className="header-btn-item">
+                        <Link
+                        to={{
+                            pathname:"/"
+                        }}>Home</Link>
+                    </div>
+                    <div className="header-btn-item">Setting</div>
+                    <div className="header-btn-item">Filter</div>
                     <div className="header-btn-item">
                         <Link
                         onClick={this.signout.bind(this)} 
@@ -28,8 +42,6 @@ class Header extends Component {
                         Sign out
                         </Link>
                     </div>
-                    <div className="header-btn-item">Setting</div>
-                    <div className="header-btn-item">Filter</div>
                 </div>
             </div>
         )
