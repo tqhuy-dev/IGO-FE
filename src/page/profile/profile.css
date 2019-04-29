@@ -1,0 +1,6 @@
+.content-body-container{
+    display: flex;
+    flex-direction: column;
+    max-width: 1020px;
+    margin: auto;
+}
