@@ -11,7 +11,9 @@ class ContentBody extends Component {
             <div className="content-body-container">
                 <ContentForm />
                 <br/>
-                <ContentList />
+                <ContentList
+                dataType="home"
+                 />
             </div>
         )
     }

@@ -13,12 +13,18 @@ class ContentList extends Component {
 
     retrieveListContents() {
         const dataStorage = JSON.parse(localStorage.getItem(localStorageUserKey));
-        axios.get(enviroment + 'contents' , {headers : {
+        let url = this.props.dataType === 'home' ? enviroment + 'contents' : enviroment + 'users/' + dataStorage.data.username;
+        axios.get(url , {headers : {
             Authorization: 'Bearer ' + dataStorage.token
         }})
         .then((data) => {
-            this.props.onHandleRetrieveListContents(data.data.data);
-            console.log(data.data.data);
+            let dataContent = [];
+            if(this.props.dataType === 'home') {
+                dataContent = data.data.data;
+            }else if(this.props.dataType === 'profile') {
+                dataContent = data.data.data.contents
+            }
+            this.props.onHandleRetrieveListContents(dataContent);
         })
     }
     render() {

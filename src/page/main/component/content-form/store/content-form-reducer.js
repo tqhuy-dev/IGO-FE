@@ -201,8 +201,6 @@ const contentFormReducer = (state = initializeState, action) => {
             listContent: listContentData
         };
     }
-    console.log('active');
-    
     return state;
 }
 

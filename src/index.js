@@ -5,11 +5,11 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux'
-import reducer from './store/reducer';
-import ResultReducer from './store/result-store';
+import contentFormReducer from './page/main/component/content-form/store/content-form-reducer';
+import CityReducer from './page/main/component/content-form/store/city-reducer';
 const rootReducer = combineReducers({
-    ctr: reducer,
-    res: ResultReducer
+    form: contentFormReducer,
+    data: CityReducer
 })
 const store = createStore(rootReducer);
 ReactDOM.render( <Provider store={store}> <App /></Provider>, document.getElementById('root'));

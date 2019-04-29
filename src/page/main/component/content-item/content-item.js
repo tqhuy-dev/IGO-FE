@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import '../content-item/content-item.css';
 import svg from '../../../../logo.svg';
 import { connect } from 'react-redux';
-import { localStorageUserKey } from '../../../../share/constant';
 class ContentItem extends Component {
 
     render() {
