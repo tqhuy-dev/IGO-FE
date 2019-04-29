@@ -77,7 +77,8 @@ class SigninComponent extends Component {
             first_name: this.state.user.firstName,
             last_name: this.state.user.lastName,
             phone: this.state.user.phone,
-            birthday: new Date(this.state.user.birthdate)
+            birthday: new Date(this.state.user.birthdate),
+            avatar: ''
         }
 
         axios.post(enviroment + 'users/' , bodySignup)

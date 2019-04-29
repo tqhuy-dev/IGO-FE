@@ -65,6 +65,21 @@ const contentFormReducer = (state = initializeState, action) => {
         })
         window.location.reload();
     } else
+    if(action.type === 'DELETE') {
+        axios.delete(enviroment + 'contents/' + action.value , {
+            headers:{
+                Authorization : 'Bearer ' + JSON.parse(localStorage.getItem(localStorageUserKey)).token
+            }
+        })
+        .then((result) => {
+            alert(result.data.message);
+        })
+        .catch(error => {
+            alert(error.message);
+        })
+        window.location.reload();
+        return state;
+    }else
     if (action.type === 'TYPE_LOCATION') {
         let dataLocation = action.active === 'ADD' ?
             action.value.target.value :

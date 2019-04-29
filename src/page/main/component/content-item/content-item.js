@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import '../content-item/content-item.css';
 import svg from '../../../../logo.svg';
+import { connect } from 'react-redux';
+import { localStorageUserKey } from '../../../../share/constant';
 class ContentItem extends Component {
 
     render() {
@@ -19,7 +21,9 @@ class ContentItem extends Component {
                                 > <a href="">{element.name} , </a></span>
                             )
                         })}
-                        <span className="delete">delete</span>
+                        <span className="delete"
+                        onClick={() => this.props.onHandleDeleteContent(this.props.data._id)}
+                        >delete</span>
                         </div>
                         <div className="header-time">{ new Date(Number.parseInt(this.props.data.createAt)).toLocaleDateString('en-US')}
                         <span className="header-country">{this.props.data.location.name} - {this.props.data.location.country}</span>
@@ -40,4 +44,20 @@ class ContentItem extends Component {
     }
 }
 
-export default ContentItem
+const mapStateToProps = state =>{
+    return {
+        contents: state.form.listContent
+    }
+}
+
+const mapDispatchToProps = dispatch =>{
+    return {
+      onHandleDeleteContent: (idContent) => dispatch({
+          type: 'DELETE',
+          value: idContent
+      })
+    }
+}
+
+
+export default connect(mapStateToProps , mapDispatchToProps)(ContentItem);
