@@ -1,22 +1,27 @@
 const initializeState = {
     userDetail:{
-        username: '',
+        username: 'temp',
         firstName: '',
         lastName: '',
         phone: '',
-        avatar:''
+        avatar:'',
+        birthday:''
     }
 }
 
 const userDetailReducer = (state = initializeState , action) =>{
     if(action.type === 'GET_USER') {
-        let newState = Object.assign({} , state);
-        newState.userDetail.username = action.value.username;
-        newState.userDetail.firstName = action.value.first_name;
-        newState.userDetail.lastName = action.value.last_name;
-        newState.userDetail.phone = action.value.phone;
-        newState.userDetail.avatar = action.value.avatar;
-        return newState;
+        let newState = Object.assign({} , state.userDetail);
+        newState.username = action.value.username;
+        newState.firstName = action.value.first_name;
+        newState.lastName = action.value.last_name;
+        newState.phone = action.value.phone;
+        newState.avatar = action.value.avatar;
+        newState.birthday = action.value.birthday
+        return {
+            ...state,
+            userDetail: newState
+        };
     }
 
     return state;
