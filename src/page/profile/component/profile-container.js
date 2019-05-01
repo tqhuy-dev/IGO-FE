@@ -4,9 +4,10 @@ import '../component/profile-container.css'
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { enviroment } from '../../../core/enviroment';
-import { localStorageUserKey } from './../../../share/constant';
+import { localStorageUserKey, HASH_KEY } from './../../../share/constant';
 import { Modal, Button , Form} from 'react-bootstrap';
 import  DatePicker from 'react-datepicker';
+import sha256 from 'sha256';
 class ProfileContainer extends Component {
 
     constructor(props) {
@@ -23,6 +24,8 @@ class ProfileContainer extends Component {
             lastName:'',
             phone: '',
             birthday: new Date(),
+            password:'',
+            confirmPassword: ''
         },
     }
 
@@ -59,8 +62,17 @@ class ProfileContainer extends Component {
                 ...this.state.form,
                 phone: event.target.value
             }
+        } else if(type === 'password') {
+            userDetail = {
+                ...this.state.form,
+                password: event.target.value
+            }
+        } else if(type === 'confirmPassword') {
+            userDetail = {
+                ...this.state.form,
+                confirmPassword: event.target.value
+            }
         }
-
         this.setState({form:userDetail})
     }
 
@@ -104,6 +116,20 @@ class ProfileContainer extends Component {
             password: '',
             avatar:''
         };
+        // if(this.state.form.password !== '' && this.state.form.password === this.state.form.confirmPassword) {
+        //     body.password = this.state.form.password;
+        // }else {
+        //     alert('password not same');
+        //     return;
+        // }
+        if(this.state.form.password !== '') {
+            if(this.state.form.password === this.state.form.confirmPassword) {
+                body.password = sha256(this.state.form.password + HASH_KEY);
+            }else {
+                alert('password not same');
+                return ;
+            }
+        }
         axios.put(enviroment + 'users/' , body ,{
             headers:{
                 Authorization: 'Bearer ' + dataUser.token
@@ -169,6 +195,7 @@ class ProfileContainer extends Component {
 
                             <Form.Group controlId="password">
                                 <Form.Control
+                                onChange={(event) => this.handleChangeValue(event , 'password')}
                                 type="password"
                                 placeholder="password"
                                 />
@@ -176,6 +203,7 @@ class ProfileContainer extends Component {
 
                             <Form.Group controlId="confirm-password">
                                 <Form.Control
+                                onChange={(event) => this.handleChangeValue(event , 'confirmPassword')}
                                 type="password"
                                 placeholder="confirm password"
                                 />
