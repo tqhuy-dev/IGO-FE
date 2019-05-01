@@ -88,3 +88,7 @@ a{
     cursor: pointer;
     font-size: 12px;
 }
+
+.link-name{
+    cursor: pointer;
+}

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../content-item/content-item.css';
 import svg from '../../../../logo.svg';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 class ContentItem extends Component {
 
     render() {
@@ -11,7 +12,13 @@ class ContentItem extends Component {
                     <img className="img" src={svg} alt="no image"/>
                     <div className="header-info">
                         <div className="header-name">
+                        <Link className="link-name"
+                        to={{
+                            pathname:'/profile/tqhuy1996'
+                        }}
+                        >
                         {this.props.data.user_data.name}
+                        </Link>
                         <span className="header-subtitle">checked in at </span>
                         {this.props.data.location.checkin.map((element , index) =>{
                             return (
