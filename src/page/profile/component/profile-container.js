@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import { enviroment } from '../../../core/enviroment';
 import { localStorageUserKey } from './../../../share/constant';
-import { Modal, Button , Form, FormGroup} from 'react-bootstrap';
+import { Modal, Button , Form} from 'react-bootstrap';
+import  DatePicker from 'react-datepicker';
 class ProfileContainer extends Component {
 
     constructor(props) {
@@ -16,15 +17,61 @@ class ProfileContainer extends Component {
     }
 
     state = {
-        isShowModal: false
+        isShowModal: false,
+        form:{
+            firstName: '',
+            lastName:'',
+            phone: '',
+            birthday: new Date(),
+        },
     }
 
     handleClose() {
         this.setState({ isShowModal: false });
     }
     
-      handleShow() {
+    handleShow() {
         this.setState({ isShowModal: true });
+        let userDetail = {
+            ...this.state.form
+        }
+        userDetail.firstName =  this.props.userDetail.firstName;
+        userDetail.lastName = this.props.userDetail.lastName;
+        userDetail.phone = this.props.userDetail.phone;
+        userDetail.birthday = new Date(Number.parseInt(this.props.userDetail.birthday));
+        this.setState({form:userDetail})
+    }
+
+    handleChangeValue(event , type) {
+        let userDetail;
+        if(type === 'firstName') {
+            userDetail = {
+                ...this.state.form,
+                firstName:event.target.value
+            }
+        } else if(type === 'lastName') {
+            userDetail = {
+                ...this.state.form,
+                lastName: event.target.value
+            }
+        } else if(type === 'phone') {
+            userDetail = {
+                ...this.state.form,
+                phone: event.target.value
+            }
+        }
+
+        this.setState({form:userDetail})
+    }
+
+    changeDatetime(date) {
+        let userState = {
+            ...this.state.form,
+            birthday: date
+        };
+        this.setState({
+            form: userState
+        })
     }
     
     componentDidMount() {
@@ -45,6 +92,35 @@ class ProfileContainer extends Component {
             console.log(error);
         })
     }
+
+    editUser() {
+        let dataUser = JSON.parse(localStorage.getItem(localStorageUserKey));
+        let body = {
+            first_name: this.state.form.firstName !== this.props.userDetail.firstName ? this.state.form.firstName : '',
+            last_name: this.state.form.lastName !== this.props.userDetail.lastName ? this.state.form.lastName : '',
+            phone: this.state.form.phone !== this.props.userDetail.phone ? this.state.form.phone : '',
+            birthday: new Date(this.state.form.birthday).toLocaleDateString('en-US') !== new Date(Number.parseInt(this.props.userDetail.birthday)).toLocaleDateString('en-US') 
+            ? new Date(this.state.form.birthday).getTime().toString() : '',
+            password: '',
+            avatar:''
+        };
+        axios.put(enviroment + 'users/' , body ,{
+            headers:{
+                Authorization: 'Bearer ' + dataUser.token
+            }
+        })
+        .then((result) =>{
+            this.retrieveUserDetail();
+            this.handleClose();
+        })
+
+        .catch(error =>{
+            console.log(error);
+            this.handleClose();
+        })
+        this.handleClose();
+    }
+
     render() {
         return (
             <div className="user-detail-container">
@@ -65,23 +141,29 @@ class ProfileContainer extends Component {
                     <Modal.Body>
                         <div>
                             <Form.Group controlId="firstname">
-                                <Form.Control 
+                                <Form.Control
+                                onChange={(event) => this.handleChangeValue(event , 'firstName')}
                                 type="text"
                                 placeholder="firstname"
+                                defaultValue={this.state.form.firstName}
                                 />
                             </Form.Group>
 
                             <Form.Group controlId="lastname">
                                 <Form.Control
+                                onChange={(event) => this.handleChangeValue(event , 'lastName')}
                                 type="text"
                                 placeholder="lastname"
+                                defaultValue={this.state.form.lastName}
                                  />
                             </Form.Group>
 
                             <Form.Group controlId="phone">
                                 <Form.Control
+                                onChange={(event) => this.handleChangeValue(event , 'phone')}
                                 type="number"
                                 placeholder="phone"
+                                defaultValue={this.state.form.phone}
                                 />
                             </Form.Group>
 
@@ -98,36 +180,18 @@ class ProfileContainer extends Component {
                                 placeholder="confirm password"
                                 />
                             </Form.Group>
-                            <div>Birthday</div>
-                            <div className="form-birthday">
-                                <Form.Group controlId="date">
-                                    <Form.Control
-                                    type="number"
-                                    placeholder="date"
-                                    />
-                                </Form.Group>
 
-                                <Form.Group controlId="month">
-                                    <Form.Control
-                                    type="number"
-                                    placeholder="month"
-                                    />
-                                </Form.Group>
-
-                                <Form.Group controlId="year">
-                                    <Form.Control
-                                    type="number"
-                                    placeholder="year"
-                                    />
-                                </Form.Group>
-                            </div>
+                            <DatePicker
+                                 selected={this.state.form.birthday}
+                                 onChange={this.changeDatetime.bind(this)}
+                             />
                         </div>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={this.handleClose}>
                         Close
                         </Button>
-                        <Button variant="primary" onClick={this.handleClose}>
+                        <Button variant="primary" onClick={this.editUser.bind(this)}>
                         Save Changes
                         </Button>
                     </Modal.Footer>
