@@ -27,6 +27,7 @@ class ProfileContainer extends Component {
             password:'',
             confirmPassword: ''
         },
+        isFriend: false
     }
 
     handleClose() {
@@ -88,6 +89,13 @@ class ProfileContainer extends Component {
     
     componentDidMount() {
         this.retrieveUserDetail();
+        this.checkFriends();
+        let dataUser = JSON.parse(localStorage.getItem(localStorageUserKey));
+        if(this.props.username === dataUser.data.username) {
+            this.setState({
+                isFriend: true
+            })
+        }
     }
 
     retrieveUserDetail() {
@@ -147,6 +155,48 @@ class ProfileContainer extends Component {
         this.handleClose();
     }
 
+    checkFriends() {
+        let dataStorage = JSON.parse(localStorage.getItem(localStorageUserKey));
+        axios.get(enviroment + 'users/friends/' + dataStorage.data.username , {
+            headers:{
+                Authorization: 'bearer ' + dataStorage.token
+            }
+        })
+        .then(result =>{
+            let listFriends = [];
+            listFriends = result.data.friends;
+            if(listFriends.length !== 0) {
+                let index = listFriends.findIndex(o => o.username === this.props.username);
+                console.log(index);
+                if(index !== -1) {
+                    this.setState({
+                        isFriend: true
+                    })
+                }
+            }
+        })
+    }
+
+    addFriend() {
+        let token = JSON.parse(localStorage.getItem(localStorageUserKey)).token;
+        axios.post(enviroment + 'users/friends' , {
+            username:this.props.username
+        },{
+            headers:{
+                Authorization: 'bearer ' +  token
+            }
+        })
+        .then(result =>{
+            alert(result.data.message);
+            this.setState({
+                isFriend: true
+            })
+        })
+        .catch(error =>{
+            console.log(error);
+        })
+    }
+
     render() {
         return (
             <div className="user-detail-container">
@@ -156,6 +206,10 @@ class ProfileContainer extends Component {
                     <div className="information">Email:{this.props.userDetail.username}</div>
                     <div className="information">Phone:{this.props.userDetail.phone}</div>
                     <div className="information">Birthday:{new Date(Number.parseInt(this.props.userDetail.birthday)).toLocaleDateString('en-US')}</div>
+                    <div
+                    onClick={() => this.addFriend()}
+                    hidden={this.state.isFriend}
+                    className="information">Add Friend</div>
                 </div>
                 <div className="btn-container"
                 onClick={this.handleShow}

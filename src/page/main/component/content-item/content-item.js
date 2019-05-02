@@ -3,9 +3,11 @@ import '../content-item/content-item.css';
 import svg from '../../../../logo.svg';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { localStorageUserKey } from './../../../../share/constant';
 class ContentItem extends Component {
 
     render() {
+        let data = JSON.parse(localStorage.getItem(localStorageUserKey));
         return (
             <div className="content-container border-shadow">
                 <div className="header">
@@ -26,7 +28,9 @@ class ContentItem extends Component {
                                 > <a href="">{element.name} , </a></span>
                             )
                         })}
-                        <span className="delete"
+                        <span
+                        hidden={data.data.username !== this.props.data.username} 
+                        className="delete"
                         onClick={() => this.props.onHandleDeleteContent(this.props.data._id)}
                         >delete</span>
                         </div>
