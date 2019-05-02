@@ -92,7 +92,7 @@ class ProfileContainer extends Component {
 
     retrieveUserDetail() {
         let dataUser = JSON.parse(localStorage.getItem(localStorageUserKey));
-        axios.get(enviroment + 'users/' + dataUser.data.username , {
+        axios.get(enviroment + 'users/' + this.props.username , {
             headers: {
                 Authorization: 'Bearer ' + dataUser.token
             }

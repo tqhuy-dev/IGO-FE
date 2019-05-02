@@ -13,7 +13,11 @@ class ContentList extends Component {
 
     retrieveListContents() {
         const dataStorage = JSON.parse(localStorage.getItem(localStorageUserKey));
-        let url = this.props.dataType === 'home' ? enviroment + 'contents' : enviroment + 'users/' + dataStorage.data.username;
+
+        let url = this.props.dataType === 'home' ? 
+        enviroment + 'contents' : 
+        enviroment + 'users/' + this.props.username;
+
         axios.get(url , {headers : {
             Authorization: 'Bearer ' + dataStorage.token
         }})

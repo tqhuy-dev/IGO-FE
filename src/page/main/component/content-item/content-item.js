@@ -13,9 +13,8 @@ class ContentItem extends Component {
                     <div className="header-info">
                         <div className="header-name">
                         <Link className="link-name"
-                        to={{
-                            pathname:'/profile/tqhuy1996'
-                        }}
+                        to={'/profile/' + this.props.data.username}
+                        key={this.props.data.username}
                         >
                         {this.props.data.user_data.name}
                         </Link>
