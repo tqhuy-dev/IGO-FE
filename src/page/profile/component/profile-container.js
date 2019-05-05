@@ -198,6 +198,8 @@ class ProfileContainer extends Component {
     }
 
     render() {
+        let dataUserStorage = JSON.parse(localStorage.getItem(localStorageUserKey));
+        let editFlg = dataUserStorage.data.username === this.props.userDetail.username;
         return (
             <div className="user-detail-container">
                 <img src={svg} className="avatar-user"/>
@@ -211,7 +213,9 @@ class ProfileContainer extends Component {
                     hidden={this.state.isFriend}
                     className="information">Add Friend</div>
                 </div>
-                <div className="btn-container"
+                <div
+                hidden={!editFlg} 
+                className="btn-container"
                 onClick={this.handleShow}
                 >Edit</div>
                 <Modal show={this.state.isShowModal} onHide={this.handleClose}>
