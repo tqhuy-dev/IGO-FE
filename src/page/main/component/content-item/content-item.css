@@ -53,8 +53,12 @@
     cursor: pointer;
     flex: 1;
     font-weight: bold;
-    color: blue;
+    color: rgb(165, 165, 165);
     font-size: 12px;
+}
+
+.isLike {
+    color: blue;
 }
 
 .footer-item:hover{

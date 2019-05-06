@@ -4,10 +4,53 @@ import svg from '../../../../logo.svg';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { localStorageUserKey } from './../../../../share/constant';
+import axios from 'axios';
+import { enviroment } from '../../../../core/enviroment';
 class ContentItem extends Component {
 
+    likeState = false;
+    loveState = false;
+    data = JSON.parse(localStorage.getItem(localStorageUserKey));
+    classReactionNormal = 'footer-item border-shadow';
+    classReactionSeleted = this.classReactionNormal + ' isLike';
+    reaction(type) {
+        let typeReaction = '';
+        if(type === 'like') {
+            typeReaction = this.likeState ? 'Unlike' : 'Like'
+        } else {
+            typeReaction = this.loveState ? 'Unlove' : 'Love'
+        }
+        let body = {
+            type: typeReaction,
+            username: this.data.data.username,
+            id_content: this.props.data.id
+        };
+
+        axios.put(enviroment + 'contents/reaction' , body , {
+            headers: {
+                Authorization: 'Bearer ' + this.data.token
+            }
+        })
+        .then(res =>{
+            if(res.data.status === 200) {
+                window.location.reload();
+            }
+        })
+        .catch(error =>{
+            console.log(error);
+        })
+    }
+
+    setStateReaction() {
+        let indexLike = this.props.data.reaction.like.findIndex(o => o.username === this.data.data.username);
+        this.likeState = indexLike !== -1;
+        let indexLove = this.props.data.reaction.love.findIndex(o => o.username === this.data.data.username);
+        this.loveState = indexLove !== -1;
+    }
     render() {
-        let data = JSON.parse(localStorage.getItem(localStorageUserKey));
+
+        this.setStateReaction();
+
         return (
             <div className="content-container border-shadow">
                 <div className="header">
@@ -29,7 +72,7 @@ class ContentItem extends Component {
                             )
                         })}
                         <span
-                        hidden={data.data.username !== this.props.data.username} 
+                        hidden={this.data.data.username !== this.props.data.username} 
                         className="delete"
                         onClick={() => this.props.onHandleDeleteContent(this.props.data._id)}
                         >delete</span>
@@ -43,10 +86,16 @@ class ContentItem extends Component {
                     <div>{this.props.data.content}</div>
                 </div>
                 <div className="footer">
-                    <div className="footer-item border-shadow">{this.props.data.reaction.like} Like</div>
-                    <div className="footer-item border-shadow">{this.props.data.reaction.comments} Comments</div>
-                    <div className="footer-item border-shadow">{this.props.data.reaction.share} Share</div>
-                    <div className="footer-item border-shadow">{this.props.data.reaction.love} Love</div>
+                    <div
+                    onClick={() => this.reaction('like')}
+                    className={ this.likeState ? this.classReactionSeleted : this.classReactionNormal}>{this.props.data.reaction.like.length} Like</div>
+                    
+                    <div className="footer-item border-shadow">{this.props.data.reaction.comments.length} Comments</div>
+                    <div className="footer-item border-shadow">{this.props.data.reaction.share.length} Share</div>
+                    
+                    <div
+                    onClick={() => this.reaction('love')}
+                    className={ this.loveState ? this.classReactionSeleted : this.classReactionNormal}>{this.props.data.reaction.love.length} Love</div>
                 </div>
             </div>
         )
