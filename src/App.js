@@ -6,6 +6,7 @@ import  MainPage  from '../src/page/main/container/main';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faStroopwafel } from '@fortawesome/free-solid-svg-icons'
 import Profile from './page/profile/profile';
+import ListFriend from './page/list-friends/list-friends';
 
 library.add(faStroopwafel)
 class App extends Component {
@@ -24,6 +25,7 @@ class App extends Component {
             )}
           /> */}
           <Route path="/auth" component={AuthorizationComponent} />
+          <Route path="/friends" component={ListFriend}/>
           <Route path="/profile/:username" component={Profile} />
           <Route path="/" component={MainPage} />
           {/* <Redirect /> */}

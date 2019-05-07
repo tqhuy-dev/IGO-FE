@@ -4,3 +4,19 @@
     max-width: 1020px;
     margin: auto;
 }
+
+.tab-detail-container{
+    display: flex;
+    flex-direction: row;
+}
+
+.tab-item{
+    flex: 1;
+    cursor: pointer;
+    padding: 1rem;
+    border: 1px solid rgb(233, 233, 233);
+}
+
+.tab-item:hover{
+    background-color: rgb(240, 240, 240);
+}
