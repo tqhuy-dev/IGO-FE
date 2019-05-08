@@ -2,8 +2,10 @@ import React ,{ Component } from 'react';
 import { Form } from 'react-bootstrap';
 import '../header/header.css';
 import { Link } from 'react-router-dom';
+import { localStorageUserKey } from './../../../../share/constant';
 class Header extends Component {
 
+    data = JSON.parse(localStorage.getItem(localStorageUserKey));
     signout() {
         localStorage.clear();
     }
@@ -21,7 +23,7 @@ class Header extends Component {
                     <div className="header-btn-item">
                         <Link
                         to={{
-                            pathname: '/profile/tqhuy1996'
+                            pathname: '/profile/' + this.data.data.username
                         }}
                         >Profile</Link>
                     </div>
