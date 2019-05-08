@@ -1,0 +1,17 @@
+.friend-container{
+    display: flex;
+    flex-direction: row;
+    border: 1px solid rgb(228, 228, 228);
+    width: 46%;
+    margin: 1rem;
+}
+
+img{
+    width: 100px;
+    height: 100px;
+}
+
+.friend-detail{
+    display: flex;
+    flex-direction: column;
+}
