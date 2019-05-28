@@ -3,10 +3,10 @@ import { Form, Modal } from 'react-bootstrap';
 import '../header/header.css';
 import { Link } from 'react-router-dom';
 import { localStorageUserKey } from './../../../../share/constant';
-import axios from 'axios';
-import { enviroment } from '../../../../core/enviroment';
+import LocationClass from './../../../../share/business/LocationClass';
 class Header extends Component {
 
+    locationClass = new LocationClass();
     constructor(props) {
         super(props);
         this.handleClose = this.handleClose.bind(this);
@@ -33,19 +33,12 @@ class Header extends Component {
         })
     }
 
-    getDataCountry() {
-        const token = JSON.parse(localStorage.getItem('userStorage')).token;
-        axios.get(enviroment + 'places/' , {headers : {
-            Authorization: 'Bearer ' + token
-        }})
-        .then((data) =>{
-            this.setState({
-                country: data.data.data
-            })
-        })
-        .catch((error) =>{
-            this.props.onGetCity([]);
-        })
+    async getDataCountry() {
+        let dataCountry = await this.locationClass.getDataCountry();
+        console.log(dataCountry);
+        this.setState({
+        country: dataCountry
+       })
     }
 
     render() {
