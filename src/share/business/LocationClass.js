@@ -33,6 +33,25 @@ class LocationClass {
             })
         })
     }
+
+    getDataLocation(city) {
+        const token = JSON.parse(localStorage.getItem('userStorage')).token;
+        return new Promise((resolve , reject) =>{
+            axios.get(enviroment + 'places/locations/' + city ,{headers : {
+                Authorization: 'Bearer ' + token
+            }})
+            .then((data) =>{
+                if(data.data.status === 200) {
+                    resolve(data.data.data);
+                } else {
+                    resolve([]);
+                }
+            })
+            .catch((error) =>{
+                console.log(error);
+            })
+        })
+    }
 }
 
 export default LocationClass;

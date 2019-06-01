@@ -37,10 +37,6 @@ class Header extends Component {
 
     async getDataCountry() {
         let dataCountry = await this.locationClass.getDataCountry();
-        console.log(dataCountry);
-        if(dataCountry.status !== 200) {
-            
-        }
         this.setState({
         country: dataCountry
        })
@@ -53,13 +49,40 @@ class Header extends Component {
          })
     }
 
+    async getDataLocation(event) {
+        let dataLocation =await this.locationClass.getDataLocation(event.target.value);
+        this.setState({
+            location: dataLocation
+        })
+    }
+
     render() {
         let cityDOM = this.state.city.length > 0 ? 
         (
             <Form.Group controlId="location">
                 <Form.Control
+                    onChange={(event) => this.getDataLocation(event)}
                     as="select">
                     {this.state.city.map((element , index) =>{
+                        return (
+                            <option
+                            key={index}
+                            value={element._id}
+                            >{element.name}</option>
+                        )
+                    })}
+                </Form.Control>
+            </Form.Group>
+        ) : (
+            <div></div>
+        )
+
+        let locationDOM = this.state.location.length > 0 ? 
+        (
+            <Form.Group controlId="location">
+                <Form.Control
+                    as="select">
+                    {this.state.location.map((element , index) =>{
                         return (
                             <option
                             key={index}
@@ -127,8 +150,9 @@ class Header extends Component {
                                     )
                                     })}
                                 </Form.Control>
-                                {cityDOM}
                             </Form.Group>
+                            {cityDOM}
+                            {locationDOM}
                         </Modal.Body>
                     </Modal>
                 </div>
