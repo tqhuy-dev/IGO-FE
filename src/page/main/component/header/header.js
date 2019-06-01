@@ -4,6 +4,7 @@ import '../header/header.css';
 import { Link } from 'react-router-dom';
 import { localStorageUserKey } from './../../../../share/constant';
 import LocationClass from './../../../../share/business/LocationClass';
+import { connect } from 'react-redux';
 class Header extends Component {
 
     locationClass = new LocationClass();
@@ -20,7 +21,8 @@ class Header extends Component {
     state = {
         isShowModal: false,
         country:[],
-        city:[]
+        city:[],
+        location:[]
     }
 
     handleClose() {
@@ -36,9 +38,19 @@ class Header extends Component {
     async getDataCountry() {
         let dataCountry = await this.locationClass.getDataCountry();
         console.log(dataCountry);
+        if(dataCountry.status !== 200) {
+            
+        }
         this.setState({
         country: dataCountry
        })
+    }
+
+    async getDataCity(event) {
+        let dataCityOfCountry = await this.locationClass.getDataCity(event.target.value);
+         this.setState({
+             city: dataCityOfCountry
+         })
     }
 
     render() {
@@ -47,7 +59,7 @@ class Header extends Component {
             <Form.Group controlId="location">
                 <Form.Control
                     as="select">
-                    {this.state.location.map((element , index) =>{
+                    {this.state.city.map((element , index) =>{
                         return (
                             <option
                             key={index}
@@ -104,12 +116,13 @@ class Header extends Component {
                         <Modal.Body>
                             <Form.Group controlId="city">
                                 <Form.Control
+                                    onChange={(event) => this.getDataCity(event)}
                                     as="select">
                                     {this.state.country.map((element , index) =>{
                                     return (
                                         <option
                                         key={index}
-                                        value={element.name}
+                                        value={element._id}
                                         >{element.name}</option>
                                     )
                                     })}
@@ -124,4 +137,19 @@ class Header extends Component {
     }
 }
 
-export default Header;
+const mapStateToProps = state =>{
+    return {
+        contents: state.form.listContent
+    }
+}
+
+const mapDispatchToProps = dispatch =>{
+    return {
+        onHandleRetrieveListContents: (value) => dispatch({
+            type: 'GET_LIST_CONTENTS',
+            value: value
+        })
+    }
+}
+
+export default connect(mapStateToProps , mapDispatchToProps)(Header);

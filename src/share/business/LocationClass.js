@@ -8,15 +8,30 @@ class LocationClass {
                 Authorization: 'Bearer ' + token
             }})
             .then((data) =>{
-              resolve(data.data.data);
+                    resolve(data.data.data);
             })
             .catch((error) =>{
             })
         })
     }
 
-    getDataLocation(country) {
-        
+    getDataCity(country) {
+        const token = JSON.parse(localStorage.getItem('userStorage')).token;
+        return new Promise((resolve , reject) =>{
+            axios.get(enviroment + 'places/' + country , {headers : {
+                Authorization: 'Bearer ' + token
+            }})
+            .then((data) =>{
+                if(data.data.status === 200) {
+                    resolve(data.data.data);
+                } else {
+                    resolve([]);
+                }
+            })
+            .catch((error) =>{
+                console.log(error);
+            })
+        })
     }
 }
 
