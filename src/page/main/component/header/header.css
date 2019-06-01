@@ -36,3 +36,13 @@ a:hover{
 a{
     color: white;
 }
+
+.btn-submit-filter{
+    background-color: blue;
+    color: white;
+    font-weight: bold;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+}

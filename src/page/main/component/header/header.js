@@ -22,7 +22,12 @@ class Header extends Component {
         isShowModal: false,
         country:[],
         city:[],
-        location:[]
+        location:[],
+        formFilter:{
+            city:'',
+            country:'',
+            location:''
+        }
     }
 
     handleClose() {
@@ -54,6 +59,10 @@ class Header extends Component {
         this.setState({
             location: dataLocation
         })
+    }
+
+    async submitFilter() {
+        console.log('filter');
     }
 
     render() {
@@ -153,6 +162,11 @@ class Header extends Component {
                             </Form.Group>
                             {cityDOM}
                             {locationDOM}
+                            <div
+                            onClick={() => this.submitFilter()} 
+                            className="btn-submit-filter">
+                            Filter
+                            </div>
                         </Modal.Body>
                     </Modal>
                 </div>
