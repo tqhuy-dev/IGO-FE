@@ -44,34 +44,76 @@ class Header extends Component {
 
     async getDataCountry() {
         let dataCountry = await this.locationClass.getDataCountry();
+        dataCountry.push({
+            _id: 'all',
+            name: 'ALL'
+        })
         this.setState({
         country: dataCountry
        })
     }
 
     async getDataCity(event) {
-        let dataCityOfCountry = await this.locationClass.getDataCity(event.target.value);
-        this.setState({
-             city: dataCityOfCountry
-         })
+        let dataCitySeleted = event.target.value;
+        if(dataCitySeleted === 'all') {
+            this.setState({
+                city: []
+            })
+        } else {
+            let dataCityOfCountry = await this.locationClass.getDataCity(dataCitySeleted);
+            dataCityOfCountry.push({
+                _id: 'all',
+                name: 'ALL'
+            })
+            this.setState({
+                city: dataCityOfCountry
+            })
+        }
     }
     async getDataLocation(event) {
         let idCity = event.target.value;
-        let dataLocation =await this.locationClass.getDataLocation(idCity);
         let formFilter = Object.assign({} , this.state.formFilter);
-        let index = this.state.city.findIndex(o => o._id ===idCity);
-        formFilter.city = this.state.city[index].name;
+        if(idCity === 'all') {
+            formFilter.city = 'all';
+            this.setState({
+                location: []
+            })
+        } else {
+            let dataLocation =await this.locationClass.getDataLocation(idCity);
+            dataLocation.push({
+                _id: 'all',
+                name: 'all'
+            })
+            let index = this.state.city.findIndex(o => o._id ===idCity);
+            formFilter.city = this.state.city[index].name;
+            this.setState({
+                location: dataLocation
+            });
+        }
         this.setState({
             formFilter: formFilter
         });
+    }
+
+    onHandleLocationSeleted(event) {
+        let dataLocationSeleted = event.target.value;
+        let formFilter = Object.assign({} , this.state.formFilter);
+        formFilter.location = dataLocationSeleted;
         this.setState({
-            location: dataLocation
+            formFilter: formFilter
         });
     }
 
     async submitFilter() {
         console.log(this.state.formFilter);
-        Axios.get(enviroment + 'contents/filter/?' + 'city=' + this.state.formFilter.city , {
+        let filterQuery = '';
+        if(this.state.formFilter.city !== '') {
+            filterQuery += 'city=' + this.state.formFilter.city;
+        }
+        if(this.state.formFilter.location !== '') {
+            filterQuery += '&location=' + this.state.formFilter.location;
+        }
+        Axios.get(enviroment + 'contents/filter/?' + filterQuery , {
             headers:{
                 Authorization: 'Bearer ' + this.data.token
             }
@@ -107,6 +149,7 @@ class Header extends Component {
         (
             <Form.Group controlId="location">
                 <Form.Control
+                onChange={(event) => this.onHandleLocationSeleted(event)}
                     as="select">
                     {this.state.location.map((element , index) =>{
                         return (
