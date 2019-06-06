@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { localStorageUserKey } from './../../../../share/constant';
 import LocationClass from './../../../../share/business/LocationClass';
 import { connect } from 'react-redux';
+import Axios from 'axios';
+import { enviroment } from '../../../../core/enviroment';
 class Header extends Component {
 
     locationClass = new LocationClass();
@@ -49,20 +51,35 @@ class Header extends Component {
 
     async getDataCity(event) {
         let dataCityOfCountry = await this.locationClass.getDataCity(event.target.value);
-         this.setState({
+        this.setState({
              city: dataCityOfCountry
          })
     }
-
     async getDataLocation(event) {
-        let dataLocation =await this.locationClass.getDataLocation(event.target.value);
+        let idCity = event.target.value;
+        let dataLocation =await this.locationClass.getDataLocation(idCity);
+        let formFilter = Object.assign({} , this.state.formFilter);
+        let index = this.state.city.findIndex(o => o._id ===idCity);
+        formFilter.city = this.state.city[index].name;
+        this.setState({
+            formFilter: formFilter
+        });
         this.setState({
             location: dataLocation
-        })
+        });
     }
 
     async submitFilter() {
-        console.log('filter');
+        console.log(this.state.formFilter);
+        Axios.get(enviroment + 'contents/filter/?' + 'city=' + this.state.formFilter.city , {
+            headers:{
+                Authorization: 'Bearer ' + this.data.token
+            }
+        })
+        .then(val =>{
+            console.log(val.data.data);
+            this.props.onHandleRetrieveListContents(val.data.data);
+        })
     }
 
     render() {
